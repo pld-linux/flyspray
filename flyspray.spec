@@ -22,6 +22,11 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Flyspray is an easy to use BTS for those who don't require all the
 complexities of something like Bugzilla.
 
+%description -l pl
+Flyspray jest ³atwym w u¿yciu System ¦ledzenia B³êdów (ang. Bug
+Tracking System - BTS) dla osób, którym nie potrzebne s± kompleksowe
+rozwi±zania w stylu Bugzilla.
+
 %prep
 %setup -q
 %patch0 -p1
