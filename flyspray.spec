@@ -41,7 +41,7 @@ cp -r lang scripts themes $RPM_BUILD_ROOT%{_appdir}
 install header.php $RPM_BUILD_ROOT%{_sysconfdir}
 ln -sf %{_sysconfdir}/header.php $RPM_BUILD_ROOT%{_appdir}/header.php
 
-echo "Alias /%{name} /usr/share/%{name}" > $RPM_BUILD_ROOT/etc/httpd/%{name}.conf
+echo "Alias /%{name} %{_datadir}/%{name}" > $RPM_BUILD_ROOT/etc/httpd/%{name}.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
