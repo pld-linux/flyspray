@@ -1,12 +1,12 @@
 Summary:	Bug Tracking System
 Summary(pl):	System ¶ledzenia b³êdów
 Name:		flyspray
-Version:	0.9.5
+Version:	0.9.6
 Release:	1
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://flyspray.rocks.cc/files/%{name}-%{version}.tar.gz
-# Source0-md5:	efb1c68721f43aca3b47076b5da27442
+# Source0-md5:	ef4947859d0648e2a59dbeab7ff36f15
 Patch0:		%{name}-config.patch
 URL:		http://flyspray.rocks.cc/
 Requires:	adodb
@@ -35,11 +35,12 @@ rozwi±zania w stylu Bugzilla.
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_appdir},%{_sysconfdir},/etc/httpd}
 
-install f* i* r* $RPM_BUILD_ROOT%{_appdir}
-cp -r lang scripts themes $RPM_BUILD_ROOT%{_appdir}
+install f* i* r* st* $RPM_BUILD_ROOT%{_appdir}
+cp -r jscalendar lang scripts themes $RPM_BUILD_ROOT%{_appdir}
 
-install header.php $RPM_BUILD_ROOT%{_sysconfdir}
+install header.php flyspray.conf.php $RPM_BUILD_ROOT%{_sysconfdir}
 ln -sf %{_sysconfdir}/header.php $RPM_BUILD_ROOT%{_appdir}/header.php
+ln -sf %{_sysconfdir}/flyspray.conf.php $RPM_BUILD_ROOT%{_appdir}/flyspray.conf.php
 
 echo "Alias /%{name} %{_datadir}/%{name}" > $RPM_BUILD_ROOT/etc/httpd/%{name}.conf
 
