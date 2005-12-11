@@ -2,7 +2,7 @@ Summary:	Bug Tracking System
 Summary(pl):	System ¶ledzenia b³êdów
 Name:		flyspray
 Version:	0.9.8
-Release:	0.21
+Release:	1
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://flyspray.rocks.cc/files/%{name}-%{version}.tar.gz
@@ -37,7 +37,7 @@ rozwi±zania w stylu Bugzilla.
 Summary:	Flyspray setup package
 Summary(pl):	Pakiet do wstêpnej konfiguracji Flyspraya
 Group:		Applications/WWW
-PreReq:		%{name} = %{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 
 %description setup
 Install this package to configure initial Flyspray installation. You
