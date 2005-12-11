@@ -2,7 +2,7 @@ Summary:	Bug Tracking System
 Summary(pl):	System ¶ledzenia b³êdów
 Name:		flyspray
 Version:	0.9.8
-Release:	0.19
+Release:	0.20
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://flyspray.rocks.cc/files/%{name}-%{version}.tar.gz
@@ -56,7 +56,7 @@ pozostawienie plików instalacyjnych mog³oby byæ niebezpieczne.
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_appdir},%{_sysconfdir}}
-install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_appdir}/docs}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_appdir}}
 
 install *.php *.ico $RPM_BUILD_ROOT%{_appdir}
 cp -a includes sql lang scripts themes setup $RPM_BUILD_ROOT%{_appdir}
