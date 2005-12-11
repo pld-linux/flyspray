@@ -35,7 +35,7 @@ rozwi±zania w stylu Bugzilla.
 
 %package setup
 Summary:	Flyspray setup package
-Summary(pl):	Pakiet do wstêpnej konfiguracji Flyspray
+Summary(pl):	Pakiet do wstêpnej konfiguracji Flyspraya
 Group:		Applications/WWW
 PreReq:		%{name} = %{version}-%{release}
 
@@ -45,8 +45,8 @@ should uninstall this package when you're done, as it considered
 insecure to keep the setup files in place.
 
 %description setup -l pl
-Ten pakiet nale¿y zainstalowaæ w celu wstêpnej konfiguracji Flyspray po
-pierwszej instalacji. Potem nale¿y go odinstalowaæ, jako ¿e
+Ten pakiet nale¿y zainstalowaæ w celu wstêpnej konfiguracji Flyspraya
+po pierwszej instalacji. Potem nale¿y go odinstalowaæ, jako ¿e
 pozostawienie plików instalacyjnych mog³oby byæ niebezpieczne.
 
 %prep
