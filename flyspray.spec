@@ -2,7 +2,7 @@ Summary:	Bug Tracking System
 Summary(pl):	System ¶ledzenia b³êdów
 Name:		flyspray
 Version:	0.9.8
-Release:	0.20
+Release:	0.21
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://flyspray.rocks.cc/files/%{name}-%{version}.tar.gz
@@ -14,7 +14,7 @@ URL:		http://flyspray.rocks.cc/
 BuildRequires:	rpmbuild(macros) >= 1.264
 Requires(triggerpostun):	sed >= 4.0
 Requires:	adodb
-Requires:	php >= 4:4.3.0
+Requires:	php >= 3:4.3.0
 Requires:	webapps
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
