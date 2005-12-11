@@ -1,22 +1,28 @@
 Summary:	Bug Tracking System
 Summary(pl):	System ¶ledzenia b³êdów
 Name:		flyspray
-Version:	0.9.7
-Release:	1
+Version:	0.9.8
+Release:	0.19
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://flyspray.rocks.cc/files/%{name}-%{version}.tar.gz
-# Source0-md5:	ab686864412a0fb4590560ee360bb1f5
+# Source0-md5:	e034c2f1638cca65c41c7cb3590e2014
 Source1:	%{name}.conf
+Source2:	%{name}-apache.conf
+Patch0:		%{name}-PLD.patch
 URL:		http://flyspray.rocks.cc/
+BuildRequires:	rpmbuild(macros) >= 1.264
+Requires(triggerpostun):	sed >= 4.0
 Requires:	adodb
-Requires:	php
-Requires:	webserver
+Requires:	php >= 4:4.3.0
+Requires:	webapps
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define	_sysconfdir	/etc/%{name}
-%define _appdir		%{_datadir}/%{name}
+%define		_appdir		%{_datadir}/%{name}
+%define		_webapps	/etc/webapps
+%define		_webapp		%{name}
+%define		_sysconfdir	%{_webapps}/%{_webapp}
 
 %description
 Flyspray is an easy to use BTS for those who don't require all the
@@ -27,64 +33,107 @@ Flyspray jest ³atwym w u¿yciu System ¦ledzenia B³êdów (ang. Bug
 Tracking System - BTS) dla osób, którym nie potrzebne s± kompleksowe
 rozwi±zania w stylu Bugzilla.
 
+%package setup
+Summary:	Flyspray setup package
+Summary(pl):	Pakiet do wstêpnej konfiguracji Flyspray
+Group:		Applications/WWW
+PreReq:		%{name} = %{version}-%{release}
+
+%description setup
+Install this package to configure initial Flyspray installation. You
+should uninstall this package when you're done, as it considered
+insecure to keep the setup files in place.
+
+%description setup -l pl
+Ten pakiet nale¿y zainstalowaæ w celu wstêpnej konfiguracji Flyspray po
+pierwszej instalacji. Potem nale¿y go odinstalowaæ, jako ¿e
+pozostawienie plików instalacyjnych mog³oby byæ niebezpieczne.
+
 %prep
 %setup -q
+%patch0 -p1
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_appdir},%{_sysconfdir},/etc/httpd}
+install -d $RPM_BUILD_ROOT{%{_appdir},%{_sysconfdir}}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_appdir}/docs}
 
 install *.php *.ico $RPM_BUILD_ROOT%{_appdir}
-cp -r includes sql lang scripts themes $RPM_BUILD_ROOT%{_appdir}
+cp -a includes sql lang scripts themes setup $RPM_BUILD_ROOT%{_appdir}
+cp -a docs/licences $RPM_BUILD_ROOT%{_appdir}/setup
 
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/flyspray.conf.php
-ln -sf %{_sysconfdir}/flyspray.conf.php $RPM_BUILD_ROOT%{_appdir}/flyspray.conf.php
+install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/flyspray.conf
+rm -f $RPM_BUILD_ROOT%{_appdir}/flyspray.conf.php
 
-cat > $RPM_BUILD_ROOT/etc/httpd/%{name}.conf <<EOF
-Alias /%{name} %{_appdir}
-
-<Directory %{_appdir}/sql >
-    Options None
-    Order deny,allow
-    Deny from all
-    Allow from 127.0.0.1
-</Directory>	
-EOF
+install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
+install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post
-if [ -f /etc/httpd/httpd.conf ] && ! grep -q "^Include.*flyspray.conf" /etc/httpd/httpd.conf; then
-        echo "Include /etc/httpd/phpldapadmin.conf" >> /etc/httpd/httpd.conf
-elif [ -d /etc/httpd/httpd.conf ]; then
-         ln -sf /etc/httpd/%{name}.conf /etc/httpd/httpd.conf/99_%{name}.conf
-fi
+%post setup
+chmod 660 %{_sysconfdir}/flyspray.conf
 
-if [ -f /var/lock/subsys/httpd ]; then
-	%{_sbindir}/apachectl graceful 1>&2
-fi
-
-%postun
+%postun setup
 if [ "$1" = "0" ]; then
-        umask 027
-        if [ -d /etc/httpd/httpd.conf ]; then
-            rm -f /etc/httpd/httpd.conf/99_%{name}.conf
-        else
-                grep -v "^Include.*flyspray.conf" /etc/httpd/httpd.conf > \
-                        /etc/httpd/httpd.conf.tmp
-                mv -f /etc/httpd/httpd.conf.tmp /etc/httpd/httpd.conf
-		if [ -f /var/lock/subsys/httpd ]; then
-			%{_sbindir}/apachectl graceful 1>&2
-		fi
+	chmod 640 %{_sysconfdir}/flyspray.conf
+fi
+
+%triggerin -- apache1
+%webapp_register apache %{_webapp}
+
+%triggerun -- apache1
+%webapp_unregister apache %{_webapp}
+
+%triggerin -- apache >= 2.0.0
+%webapp_register httpd %{_webapp}
+
+%triggerun -- apache >= 2.0.0
+%webapp_unregister httpd %{_webapp}
+
+%triggerpostun -- %{name} < 0.9.8-0.1
+if [ -f /etc/%{name}/flyspray.conf.php.rpmsave ]; then
+	mv -f %{_sysconfdir}/flyspray.conf{,.rpmnew}
+	mv -f /etc/%{name}/flyspray.conf.php.rpmsave %{_sysconfdir}/flyspray.conf
+fi
+
+# migrate apache2 config
+if [ -f /etc/httpd/httpd.conf ]; then
+	sed -i -e "/^Include.*%{name}.conf/d" /etc/httpd/httpd.conf
+	httpd_reload=1
+fi
+
+# migrate from httpd (apache2) config dir
+if [ -f /etc/httpd/%{name}.conf.rpmsave ]; then
+	cp -f %{_sysconfdir}/httpd.conf{,.rpmnew}
+	mv -f /etc/httpd/%{name}.conf.rpmsave %{_sysconfdir}/httpd.conf
+	httpd_reload=1
+fi
+
+if [ -L /etc/httpd/httpd.conf/99_%{name}.conf ]; then
+	rm -f /etc/httpd/httpd.conf/99_%{name}.conf
+	httpd_reload=1
+fi
+
+if [ "$httpd_reload" ]; then
+	/usr/sbin/webapp register httpd %{_webapp}
+	if [ -f /var/lock/subsys/httpd ]; then
+		/etc/rc.d/init.d/httpd reload 1>&2
 	fi
 fi
 
 %files
 %defattr(644,root,root,755)
-%doc docs/AUTHORS.txt docs/BUGS.txt docs/CHANGELOG.txt docs/INSTALL.txt docs/README.txt docs/TODO.txt docs/UPGRADING.txt
-%dir %{_sysconfdir}
-%attr(640,root,http) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/*
-%config(noreplace) %verify(not size mtime md5) /etc/httpd/%{name}.conf
+%doc docs/{AUTHORS,BUGS,CHANGELOG,INSTALL,README,TODO,UPGRADING}.txt
+%dir %attr(750,root,http) %{_sysconfdir}
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd.conf
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/flyspray.conf
+
 %{_appdir}
 %exclude %{_appdir}/lang/langdiff.php
+%exclude %{_appdir}/setup
+
+%files setup
+%defattr(644,root,root,755)
+%{_appdir}/setup
