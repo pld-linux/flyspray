@@ -163,7 +163,7 @@ diff -u templates/license.tpl.php /tmp/license.tpl.php
  
              default:
 -            $_SESSION['page_message'][] = 'Please verify your username/password/database details.';
-+            $_SESSION['page_message'][] = 'Please verify your username/password/database details (error=$error_number)';
++            $_SESSION['page_message'][] = "Please verify your username/password/database details (error=$error_number)";
              return FALSE;
              break;
           }
