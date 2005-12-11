@@ -1,0 +1,169 @@
+--- flyspray-0.9.8/header.php	2005-10-23 03:11:14.000000000 +0300
++++ /tmp/header.php	2005-12-11 18:38:26.000000000 +0200
+@@ -34,7 +34,7 @@
+ //echo get_include_path();
+ 
+ // Define the path to the config file.  Change this line if you move flyspray.conf.php elsewhere
+-$conf_file = $path . $slash . "flyspray.conf.php";
++$conf_file = '/etc/webapps/flyspray/flyspray.conf';
+ 
+ // Check if config file exists and its not empty.
+ // If it doesn't exist or is empty, take the user to the setup page
+--- flyspray-0.9.8/setup/index.php	2005-09-18 13:45:46.000000000 +0300
++++ /tmp/index.php	2005-12-11 18:56:30.000000000 +0200
+@@ -14,9 +14,9 @@
+ 
+ error_reporting(0);
+ 
+-if (file_exists('../flyspray.conf.php') && (count($config = parse_ini_file('../flyspray.conf.php', true)) > 0) )
++if (file_exists('/etc/webapps/flyspray/flyspray.conf') && (count($config = parse_ini_file('/etc/webapps/flyspray/flyspray.conf', true)) > 0) )
+ {
+-   die('Flyspray Already Installed. Delete the contents of flyspray.conf.php to run setup.');
++   die('Flyspray Already Installed. Delete the contents of /etc/webapps/flyspray/flyspray.conf to run setup.');
+ }
+ 
+ // ---------------------------------------------------------------------
+@@ -192,7 +192,7 @@
+    function CheckAdodbLibrary()
+    {
+       // Get the ADOdb library path. If not found it will be FALSE
+-      $this->mAdodbPath = $this->ScanIncludePath('adodb.inc.php', realpath('../adodb'));
++      $this->mAdodbPath = $this->ScanIncludePath('adodb.inc.php', '/usr/share/pear/adodb');
+ 
+       // Update the status of the library
+       $this->mAdodbStatus = ($this->mAdodbPath) ? TRUE : FALSE;
+@@ -209,7 +209,7 @@
+    function CheckConfigFile()
+    {
+       // Get the full path to the file
+-      $file = realpath('../flyspray.conf.php');
++      $file = '/etc/webapps/flyspray/flyspray.conf';
+ 
+       // Update the status of the Config file
+       $this->mConfigFileStatus = $this->IsWriteable($file);
+@@ -1211,6 +1211,7 @@
+ 
+       $config_intro	=
+       "; <?php die( 'Do not access this page directly.' ); ?>
++	  ; vim: syn=dosini
+ 
+       ; This is the Flysplay configuration file. It contains the basic settings
+       ; needed for Flyspray to operate. All other preferences are stored in the
+@@ -1265,7 +1266,7 @@
+ 
+       $config_text = $config_intro . implode( "\n", $config );
+ 
+-      if (is_writable('../flyspray.conf.php') && ($fp = fopen('../flyspray.conf.php', "w")))
++      if (is_writable('/etc/webapps/flyspray/flyspray.conf') && ($fp = fopen('/etc/webapps/flyspray/flyspray.conf', "w")))
+       {
+          fputs($fp, $config_text, strlen($config_text));
+          fclose($fp);
+diff -u ../../../flyspray-0.9.8/setup/templates/./complete_install.tpl.php /tmp/complete_install.tpl.php
+--- flyspray-0.9.8/setup/templates/./complete_install.tpl.php	2005-08-27 05:49:56.000000000 +0300
++++ /tmp/complete_install.tpl.php	2005-12-11 19:00:06.000000000 +0200
+@@ -33,8 +33,8 @@
+ 						<td>
+ 							The configuration file is not writeable. You will have to upload the following
+ 							code manually. Click in the textarea to highlight all of the code. Copy and
+-							paste the contents into the flyspray.conf.php file available in the base of
+-							<?php echo $product_name; ?> installation.
++							paste the contents into the flyspray.conf file in the webapps directory of
++							<?php echo $product_name; ?> (/etc/webapps/flyspray).
+ 						</td>
+ 					</tr>
+ 					<tr>
+@@ -50,10 +50,10 @@
+ 				if (!$config_writeable)
+ 				{
+ 				?>
+-				<h3>flyspray.conf.php NOT writeable</h3>
++				<h3>flyspray.conf NOT writeable</h3>
+ 				<p>
+-					To complete setup, copy and paste the contents of the textarea box into flyspray.conf.php
+-					This file resides in the base of your <?php echo $product_name; ?> installation.
++					To complete setup, copy and paste the contents of the textarea box into flyspray.conf
++					This file resides in the webapps directory of your <?php echo $product_name; ?> installation (/etc/webapps/flyspray).
+ 				</p>
+ 				<?php
+ 				}
+diff -u ../../../flyspray-0.9.8/setup/templates/./pre_install.tpl.php /tmp/pre_install.tpl.php
+--- flyspray-0.9.8/setup/templates/./pre_install.tpl.php	2005-08-27 05:49:56.000000000 +0300
++++ /tmp/pre_install.tpl.php	2005-12-11 18:58:20.000000000 +0200
+@@ -100,7 +100,7 @@
+ 			<div class="installBlock">
+ 				<table class="formBlock">
+ 				<tr>
+-					<td valign="top">../flyspray.conf.php</td>
++					<td valign="top">../flyspray.conf</td>
+ 					<td align="left"><b><?php echo $config_output; ?></b></td>
+ 					<td>&nbsp;</td>
+ 				</tr>
+@@ -114,12 +114,12 @@
+ 				</p>
+ 				<?php if (!$config_status){ ?>
+ 				<p>
+-				The installer has detected that the <strong>flyspray.conf.php</strong> file is not
++				The installer has detected that the <strong>flyspray.conf</strong> file is not
+ 				writeable. Please make it writeable by the web-server user or world writeable to
+ 				proceed with the setup. Alternatively if you wish to proceed, the installer will
+ 				make available the contents of the configuration file at the end of the setup. You
+ 				will then have to manually copy and paste the contents into the configuration file
+-				located at <strong><?php echo APPLICATION_PATH . '/flyspray.conf.php'; ?></strong>.
++				located at <strong>/etc/webapps/flyspray/flyspray.conf</strong>.
+ 				</p>
+ 				<?php } ?>
+ 			</div>
+diff -u templates/license.tpl.php /tmp/license.tpl.php
+--- ./setup/templates/license.tpl.php	2005-08-27 05:49:56.000000000 +0300
++++ /tmp/license.tpl.php	2005-12-11 19:07:25.000000000 +0200
+@@ -23,7 +23,7 @@
+          <div class="clr"></div>
+ 
+          <div class="formBlock" style="width:470px;position:relative;">
+-            <iframe src="../docs/licences/gnu_lgpl.html" class="license" width="450" frameborder="0" scrolling="auto"></iframe>
++            <iframe src="licences/gnu_lgpl.html" class="license" width="450" frameborder="0" scrolling="auto"></iframe>
+          </div>
+ 
+          <div class="clr"></div>
+--- flyspray-0.9.8/setup/index.php	2005-12-11 19:32:38.000000000 +0200
++++ /tmp/index.php	2005-12-11 19:36:24.000000000 +0200
+@@ -1341,7 +1347,7 @@
+    function ProcessDatabaseSetup($data)
+    {
+       // Look for ADOdb
+-      $this->mAdodbPath = $this->ScanIncludePath('adodb.inc.php', realpath('../adodb'));
++      $this->mAdodbPath = $this->ScanIncludePath('adodb.inc.php', '/usr/share/pear/adodb');
+       require_once($this->mAdodbPath);
+ 
+       // Perform a number of fatality checks, then die gracefully
+--- flyspray-0.9.8/setup/index.php	2005-12-11 19:37:17.000000000 +0200
++++ /tmp/index.php	2005-12-11 19:40:25.000000000 +0200
+@@ -1118,7 +1118,7 @@
+                   'db_hostname' => array('Database hostname', 'string', TRUE),
+                   'db_type' =>  array('Database type', 'string', TRUE),
+                   'db_username' => array('Database username', 'string', TRUE),
+-                  'db_password' => array('Database password', 'string', TRUE),
++                  'db_password' => array('Database password', 'string', false),
+                   'db_name' => array('Database name', 'string', TRUE),
+                   'db_prefix' => array('Table prefix', 'string', TRUE),
+                   'db_delete' => array('Delete tables checkbox', 'string', FALSE),
+--- flyspray-0.9.8/setup/index.php	2005-12-11 19:40:49.000000000 +0200
++++ /tmp/index.php	2005-12-11 19:46:55.000000000 +0200
+@@ -1155,7 +1155,7 @@
+                'db_hostname' => array('Database hostname', 'string', TRUE),
+                'db_type' =>  array('Database type', 'string', TRUE),
+                'db_username' => array('Database username', 'string', TRUE),
+-               'db_password' => array('Database password', 'string', TRUE),
++               'db_password' => array('Database password', 'string', false),
+                'db_name' => array('Database name', 'string', TRUE),
+                'db_prefix' => array('Table prefix', 'string', TRUE),
+                'db_setup_options' =>  array('Database type', 'number', TRUE),
+@@ -1385,7 +1385,7 @@
+             break;
+ 
+             default:
+-            $_SESSION['page_message'][] = 'Please verify your username/password/database details.';
++            $_SESSION['page_message'][] = 'Please verify your username/password/database details (error=$error_number)';
+             return FALSE;
+             break;
+          }
