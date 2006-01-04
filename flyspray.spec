@@ -2,7 +2,7 @@ Summary:	Bug Tracking System
 Summary(pl):	System ¶ledzenia b³êdów
 Name:		flyspray
 Version:	0.9.8
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://flyspray.rocks.cc/files/%{name}-%{version}.tar.gz
@@ -11,7 +11,7 @@ Source1:	%{name}.conf
 Source2:	%{name}-apache.conf
 Patch0:		%{name}-PLD.patch
 URL:		http://flyspray.rocks.cc/
-BuildRequires:	rpmbuild(macros) >= 1.264
+BuildRequires:	rpmbuild(macros) >= 1.268
 Requires(triggerpostun):	sed >= 4.0
 Requires:	adodb
 Requires:	php >= 3:4.3.0
@@ -117,9 +117,7 @@ fi
 
 if [ "$httpd_reload" ]; then
 	/usr/sbin/webapp register httpd %{_webapp}
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd reload 1>&2
-	fi
+	%service httpd reload
 fi
 
 %files
