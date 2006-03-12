@@ -2,7 +2,7 @@ Summary:	Bug Tracking System
 Summary(pl):	System ¶ledzenia b³êdów
 Name:		flyspray
 Version:	0.9.8
-Release:	3.4
+Release:	4
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://flyspray.rocks.cc/files/%{name}-%{version}.tar.gz
