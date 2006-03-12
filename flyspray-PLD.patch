@@ -28,7 +28,7 @@
     {
        // Get the ADOdb library path. If not found it will be FALSE
 -      $this->mAdodbPath = $this->ScanIncludePath('adodb.inc.php', realpath('../adodb'));
-+      $this->mAdodbPath = $this->ScanIncludePath('adodb.inc.php', '/usr/share/pear/adodb');
++      $this->mAdodbPath = $this->ScanIncludePath('adodb.inc.php', '/usr/share/php/adodb');
  
        // Update the status of the library
        $this->mAdodbStatus = ($this->mAdodbPath) ? TRUE : FALSE;
@@ -132,7 +132,7 @@ diff -u templates/license.tpl.php /tmp/license.tpl.php
     {
        // Look for ADOdb
 -      $this->mAdodbPath = $this->ScanIncludePath('adodb.inc.php', realpath('../adodb'));
-+      $this->mAdodbPath = $this->ScanIncludePath('adodb.inc.php', '/usr/share/pear/adodb');
++      $this->mAdodbPath = $this->ScanIncludePath('adodb.inc.php', '/usr/share/php/adodb');
        require_once($this->mAdodbPath);
  
        // Perform a number of fatality checks, then die gracefully

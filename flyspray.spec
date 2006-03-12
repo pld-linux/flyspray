@@ -2,7 +2,7 @@ Summary:	Bug Tracking System
 Summary(pl):	System ¶ledzenia b³êdów
 Name:		flyspray
 Version:	0.9.8
-Release:	3
+Release:	3.4
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://flyspray.rocks.cc/files/%{name}-%{version}.tar.gz
@@ -13,7 +13,7 @@ Patch0:		%{name}-PLD.patch
 URL:		http://flyspray.rocks.cc/
 BuildRequires:	rpmbuild(macros) >= 1.268
 Requires(triggerpostun):	sed >= 4.0
-Requires:	adodb
+Requires:	adodb >= 4.67-1.17
 Requires:	php >= 3:4.3.0
 Requires:	webapps
 BuildArch:	noarch
@@ -91,7 +91,7 @@ fi
 %triggerun -- apache < 2.2.0, apache-base
 %webapp_unregister httpd %{_webapp}
 
-%triggerpostun -- %{name} < 0.9.8-0.1
+%triggerpostun -- %{name} < 0.9.8-3.3
 if [ -f /etc/%{name}/flyspray.conf.php.rpmsave ]; then
 	mv -f %{_sysconfdir}/flyspray.conf{,.rpmnew}
 	mv -f /etc/%{name}/flyspray.conf.php.rpmsave %{_sysconfdir}/flyspray.conf
@@ -119,6 +119,8 @@ if [ "$httpd_reload" ]; then
 	/usr/sbin/webapp register httpd %{_webapp}
 	%service httpd reload
 fi
+
+%{__sed} -i -e 's,%{php_pear_dir}/adodb/adodb.inc.php,/usr/share/php/adodb/adodb.inc.php,' %{_sysconfdir}/flyspray.conf
 
 %files
 %defattr(644,root,root,755)
