@@ -2,16 +2,19 @@ Summary:	Bug Tracking System
 Summary(pl):	System ¶ledzenia b³êdów
 Name:		flyspray
 Version:	0.9.8
-Release:	5
+Release:	6
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://flyspray.rocks.cc/files/%{name}-%{version}.tar.gz
 # Source0-md5:	e034c2f1638cca65c41c7cb3590e2014
 Source1:	%{name}.conf
 Source2:	%{name}-apache.conf
+Source3:	http://flyspray.rocks.cc/files/pl-%{version}.zip
+# Source3-md5:	c96d26a3f6599b9a53f8f563a1d4a453
 Patch0:		%{name}-PLD.patch
 URL:		http://flyspray.rocks.cc/
 BuildRequires:	rpmbuild(macros) >= 1.268
+BuildRequires:	unzip
 Requires(triggerpostun):	sed >= 4.0
 Requires:	adodb >= 4.67-1.17
 Requires:	php >= 3:4.3.0
@@ -49,6 +52,18 @@ Ten pakiet nale¿y zainstalowaæ w celu wstêpnej konfiguracji Flyspraya
 po pierwszej instalacji. Potem nale¿y go odinstalowaæ, jako ¿e
 pozostawienie plików instalacyjnych mog³oby byæ niebezpieczne.
 
+%package lang-pl
+Summary:	Flyspray Polish resource files
+Summary(pl):	Pakiet z polsk± wersj± jêzykow± do Flyspray
+Group:		Applications/WWW
+Requires:	%{name} = %{version}-%{release}
+
+%description lang-pl
+This package contains Polish localization files for Flyspray.
+
+%description lang-pl -l pl
+Pakiet zawiera polsk± lokalizacjê dla Flyspray'a.
+
 %prep
 %setup -q
 %patch0 -p1
@@ -67,6 +82,8 @@ rm -f $RPM_BUILD_ROOT%{_appdir}/flyspray.conf.php
 
 install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
+
+%{__unzip} -q %{SOURCE3} -d $RPM_BUILD_ROOT%{_appdir}/lang
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -132,8 +149,13 @@ fi
 
 %{_appdir}
 %exclude %{_appdir}/lang/langdiff.php
+%exclude %{_appdir}/lang/pl
 %exclude %{_appdir}/setup
 
 %files setup
 %defattr(644,root,root,755)
 %{_appdir}/setup
+
+%files lang-pl
+%defattr(644,root,root,755)
+%{_appdir}/lang/pl
