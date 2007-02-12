@@ -1,5 +1,5 @@
 Summary:	Bug Tracking System
-Summary(pl):	System ¶ledzenia b³êdów
+Summary(pl.UTF-8):   System Å›ledzenia bÅ‚Ä™dÃ³w
 Name:		flyspray
 Version:	0.9.8
 Release:	7
@@ -31,14 +31,14 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Flyspray is an easy to use BTS for those who don't require all the
 complexities of something like Bugzilla.
 
-%description -l pl
-Flyspray jest ³atwym w u¿yciu System ¦ledzenia B³êdów (ang. Bug
-Tracking System - BTS) dla osób, którym nie potrzebne s± kompleksowe
-rozwi±zania w stylu Bugzilla.
+%description -l pl.UTF-8
+Flyspray jest Å‚atwym w uÅ¼yciu System Åšledzenia BÅ‚Ä™dÃ³w (ang. Bug
+Tracking System - BTS) dla osÃ³b, ktÃ³rym nie potrzebne sÄ… kompleksowe
+rozwiÄ…zania w stylu Bugzilla.
 
 %package setup
 Summary:	Flyspray setup package
-Summary(pl):	Pakiet do wstêpnej konfiguracji Flyspraya
+Summary(pl.UTF-8):   Pakiet do wstÄ™pnej konfiguracji Flyspraya
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 
@@ -47,22 +47,22 @@ Install this package to configure initial Flyspray installation. You
 should uninstall this package when you're done, as it considered
 insecure to keep the setup files in place.
 
-%description setup -l pl
-Ten pakiet nale¿y zainstalowaæ w celu wstêpnej konfiguracji Flyspraya
-po pierwszej instalacji. Potem nale¿y go odinstalowaæ, jako ¿e
-pozostawienie plików instalacyjnych mog³oby byæ niebezpieczne.
+%description setup -l pl.UTF-8
+Ten pakiet naleÅ¼y zainstalowaÄ‡ w celu wstÄ™pnej konfiguracji Flyspraya
+po pierwszej instalacji. Potem naleÅ¼y go odinstalowaÄ‡, jako Å¼e
+pozostawienie plikÃ³w instalacyjnych mogÅ‚oby byÄ‡ niebezpieczne.
 
 %package lang-pl
 Summary:	Flyspray Polish resource files
-Summary(pl):	Pakiet z polsk± wersj± jêzykow± do Flyspray
+Summary(pl.UTF-8):   Pakiet z polskÄ… wersjÄ… jÄ™zykowÄ… do Flyspray
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 
 %description lang-pl
 This package contains Polish localization files for Flyspray.
 
-%description lang-pl -l pl
-Pakiet zawiera polsk± lokalizacjê dla Flyspray'a.
+%description lang-pl -l pl.UTF-8
+Pakiet zawiera polskÄ… lokalizacjÄ™ dla Flyspray'a.
 
 %prep
 %setup -q
