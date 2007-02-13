@@ -1,5 +1,5 @@
 Summary:	Bug Tracking System
-Summary(pl.UTF-8):   System śledzenia błędów
+Summary(pl.UTF-8):	System śledzenia błędów
 Name:		flyspray
 Version:	0.9.8
 Release:	7
@@ -38,7 +38,7 @@ rozwiązania w stylu Bugzilla.
 
 %package setup
 Summary:	Flyspray setup package
-Summary(pl.UTF-8):   Pakiet do wstępnej konfiguracji Flyspraya
+Summary(pl.UTF-8):	Pakiet do wstępnej konfiguracji Flyspraya
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 
@@ -54,7 +54,7 @@ pozostawienie plików instalacyjnych mogłoby być niebezpieczne.
 
 %package lang-pl
 Summary:	Flyspray Polish resource files
-Summary(pl.UTF-8):   Pakiet z polską wersją językową do Flyspray
+Summary(pl.UTF-8):	Pakiet z polską wersją językową do Flyspray
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 
