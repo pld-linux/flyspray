@@ -13,7 +13,7 @@ Source3:	http://flyspray.rocks.cc/files/pl-%{version}.zip
 # Source3-md5:	c96d26a3f6599b9a53f8f563a1d4a453
 Patch0:		%{name}-PLD.patch
 URL:		http://flyspray.rocks.cc/
-BuildRequires:	rpmbuild(macros) >= 1.268
+BuildRequires:	rpmbuild(macros) >= 1.461
 BuildRequires:	unzip
 Requires(triggerpostun):	sed >= 4.0
 Requires:	adodb >= 4.67-1.17
@@ -137,7 +137,7 @@ if [ "$httpd_reload" ]; then
 	%service httpd reload
 fi
 
-%{__sed} -i -e 's,%{php_pear_dir}/adodb/adodb.inc.php,/usr/share/php/adodb/adodb.inc.php,' %{_sysconfdir}/flyspray.conf
+%{__sed} -i -e 's,%{php_pear_dir}/adodb/adodb.inc.php,%{php_data_dir}/adodb/adodb.inc.php,' %{_sysconfdir}/flyspray.conf
 
 %files
 %defattr(644,root,root,755)
