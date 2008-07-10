@@ -2,11 +2,11 @@ Summary:	Bug Tracking System
 Summary(pl.UTF-8):	System śledzenia błędów
 Name:		flyspray
 Version:	0.9.9.5.1
-Release:	0.1
+Release:	0.2
 License:	GPL
 Group:		Applications/WWW
 Source0:	%{name}-%{version}.tar.gz
-# Source0-md5:	a0181d1798cf305c1472d43797a39078	
+# Source0-md5:	a0181d1798cf305c1472d43797a39078
 Source1:	%{name}.conf
 Source2:	%{name}-apache.conf
 Patch0:		%{name}-PLD.patch
@@ -73,7 +73,7 @@ install -d $RPM_BUILD_ROOT{%{_appdir},%{_sysconfdir}}
 install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_appdir}}
 
 install *.php *.ico $RPM_BUILD_ROOT%{_appdir}
-cp -a attachments cache includes lang scripts themes setup $RPM_BUILD_ROOT%{_appdir}
+cp -a attachments cache includes javascript lang plugins scripts templates themes setup $RPM_BUILD_ROOT%{_appdir}
 cp -a docs/licences $RPM_BUILD_ROOT%{_appdir}/setup
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/flyspray.conf
