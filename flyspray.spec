@@ -5,12 +5,13 @@ Version:	0.9.9.5.1
 Release:	0.2
 License:	GPL
 Group:		Applications/WWW
+# Source0Download: http://flyspray.org/download
 Source0:	%{name}-%{version}.tar.gz
 # Source0-md5:	a0181d1798cf305c1472d43797a39078
 Source1:	%{name}.conf
 Source2:	%{name}-apache.conf
 Patch0:		%{name}-PLD.patch
-URL:		http://flyspray.org
+URL:		http://flyspray.org/
 BuildRequires:	rpmbuild(macros) >= 1.461
 BuildRequires:	unzip
 Requires(triggerpostun):	sed >= 4.0
