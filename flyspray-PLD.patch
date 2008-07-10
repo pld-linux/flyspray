@@ -1,6 +1,19 @@
+diff -ur flyspray-0.9.9.5.1/includes/class.database.php flyspray-0.9.9.5.1.new/includes/class.database.php
+--- flyspray-0.9.9.5.1/includes/class.database.php	2008-03-17 17:41:16.000000000 +0000
++++ flyspray-0.9.9.5.1.new/includes/class.database.php	2008-07-10 06:42:55.000000000 +0000
+@@ -16,7 +16,7 @@
+     die('Do not access this file directly.');
+ }
+ 
+-require_once dirname(dirname(__FILE__)) . '/adodb/adodb.inc.php';
++require_once . '/usr/share/php/adodb/adodb.inc.php';
+ 
+ class Database
+ {
+Tylko w flyspray-0.9.9.5.1.new/includes: class.database.php~
 diff -ur flyspray-0.9.9.5.1/setup/index.php flyspray-0.9.9.5.1.new/setup/index.php
 --- flyspray-0.9.9.5.1/setup/index.php	2008-03-07 18:55:22.000000000 +0000
-+++ flyspray-0.9.9.5.1.new/setup/index.php	2008-07-10 06:11:35.000000000 +0000
++++ flyspray-0.9.9.5.1.new/setup/index.php	2008-07-10 06:44:40.000000000 +0000
 @@ -12,9 +12,9 @@
  ini_set('memory_limit', '64M');
  
@@ -122,3 +135,18 @@ diff -ur flyspray-0.9.9.5.1/setup/templates/pre_install.tpl flyspray-0.9.9.5.1.n
 \ Brak znaku nowej linii na końcu pliku
 +			<div class="clr"></div>
 Tylko w flyspray-0.9.9.5.1.new/setup/templates: pre_install.tpl~
+diff -ur flyspray-0.9.9.5.1/setup/upgrade.php flyspray-0.9.9.5.1.new/setup/upgrade.php
+--- flyspray-0.9.9.5.1/setup/upgrade.php	2007-08-23 17:55:30.000000000 +0000
++++ flyspray-0.9.9.5.1.new/setup/upgrade.php	2008-07-10 06:45:24.000000000 +0000
+@@ -39,8 +39,8 @@
+ @require_once OBJECTS_PATH . '/class.tpl.php';
+ 
+ // Initialise DB
+-require_once APPLICATION_PATH . '/adodb/adodb.inc.php';
+-require_once APPLICATION_PATH . '/adodb/adodb-xmlschema03.inc.php';
++require_once '/usr/share/php/adodb/adodb.inc.php';
++require_once '/usr/share/php/adodb/adodb-xmlschema03.inc.php';
+ 
+ $db = new Database;
+ $db->dbOpenFast($conf['database']);
+Tylko w flyspray-0.9.9.5.1.new/setup: upgrade.php~
