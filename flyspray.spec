@@ -1,22 +1,21 @@
 Summary:	Bug Tracking System
 Summary(pl.UTF-8):	System śledzenia błędów
 Name:		flyspray
-Version:	0.9.8
-Release:	7
+Version:	0.9.9.5.1
+Release:	0.1
 License:	GPL
 Group:		Applications/WWW
-Source0:	http://flyspray.rocks.cc/files/%{name}-%{version}.tar.gz
-# Source0-md5:	e034c2f1638cca65c41c7cb3590e2014
+Source0:	%{name}-%{version}.tar.gz
+# Source0-md5:	a0181d1798cf305c1472d43797a39078	
 Source1:	%{name}.conf
 Source2:	%{name}-apache.conf
-Source3:	http://flyspray.rocks.cc/files/pl-%{version}.zip
-# Source3-md5:	c96d26a3f6599b9a53f8f563a1d4a453
 Patch0:		%{name}-PLD.patch
-URL:		http://flyspray.rocks.cc/
+URL:		http://flyspray.org
 BuildRequires:	rpmbuild(macros) >= 1.461
 BuildRequires:	unzip
 Requires(triggerpostun):	sed >= 4.0
 Requires:	adodb >= 4.67-1.17
+Requires:	php-xml
 Requires:	webapps
 Requires:	webserver(php) >= 4.3.0
 BuildArch:	noarch
@@ -74,7 +73,7 @@ install -d $RPM_BUILD_ROOT{%{_appdir},%{_sysconfdir}}
 install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_appdir}}
 
 install *.php *.ico $RPM_BUILD_ROOT%{_appdir}
-cp -a includes sql lang scripts themes setup $RPM_BUILD_ROOT%{_appdir}
+cp -a attachments cache includes lang scripts themes setup $RPM_BUILD_ROOT%{_appdir}
 cp -a docs/licences $RPM_BUILD_ROOT%{_appdir}/setup
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/flyspray.conf
@@ -82,8 +81,6 @@ rm -f $RPM_BUILD_ROOT%{_appdir}/flyspray.conf.php
 
 install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
-
-%{__unzip} -q %{SOURCE3} -d $RPM_BUILD_ROOT%{_appdir}/lang
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -148,14 +145,8 @@ fi
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/flyspray.conf
 
 %{_appdir}
-%exclude %{_appdir}/lang/langdiff.php
-%exclude %{_appdir}/lang/pl
 %exclude %{_appdir}/setup
 
 %files setup
 %defattr(644,root,root,755)
 %{_appdir}/setup
-
-%files lang-pl
-%defattr(644,root,root,755)
-%{_appdir}/lang/pl
