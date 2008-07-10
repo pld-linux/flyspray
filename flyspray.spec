@@ -17,7 +17,13 @@ Requires(triggerpostun):	sed >= 4.0
 Requires:	adodb >= 4.67-1.17
 Requires:	php-xml
 Requires:	webapps
+Requires:	webserver(alias)
+Requires:	webserver(access)
+Requires:	webserver(indexfile)
 Requires:	webserver(php) >= 4.3.0
+Suggests:	php-mysql
+Suggests:	php-mysqli
+Suggests:	php-pgsql
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
