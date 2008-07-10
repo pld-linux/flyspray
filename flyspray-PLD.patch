@@ -1,28 +1,104 @@
 diff -ur flyspray-0.9.9.5.1/includes/class.database.php flyspray-0.9.9.5.1.new/includes/class.database.php
 --- flyspray-0.9.9.5.1/includes/class.database.php	2008-03-17 17:41:16.000000000 +0000
-+++ flyspray-0.9.9.5.1.new/includes/class.database.php	2008-07-10 06:42:55.000000000 +0000
++++ flyspray-0.9.9.5.1.new/includes/class.database.php	2008-07-10 07:18:07.000000000 +0000
 @@ -16,7 +16,7 @@
      die('Do not access this file directly.');
  }
  
 -require_once dirname(dirname(__FILE__)) . '/adodb/adodb.inc.php';
-+require_once . '/usr/share/php/adodb/adodb.inc.php';
++require_once '/usr/share/php/adodb/adodb.inc.php';
  
  class Database
  {
+@@ -53,7 +53,7 @@
+         if(!is_array($conf) || extract($conf, EXTR_REFS|EXTR_SKIP) < 5) {
+ 
+             die( 'Flyspray was unable to connect to the database. '
+-                 .'Check your settings in flyspray.conf.php');
++                 .'Check your settings in flyspray.conf');
+         }
+ 
+        $this->dbOpen($dbhost, $dbuser, $dbpass, $dbname, $dbtype, isset($dbprefix) ? $dbprefix : '');
+@@ -82,7 +82,7 @@
+         if ($this->dblink === false || (!empty($this->dbprefix) && !preg_match('/^[a-z][a-z0-9_]+$/i', $this->dbprefix))) {
+ 
+             die('Flyspray was unable to connect to the database. '
+-               .'Check your settings in flyspray.conf.php');
++               .'Check your settings in flyspray.conf');
+         }
+             $this->dblink->SetFetchMode(ADODB_FETCH_BOTH);
+ 
 Tylko w flyspray-0.9.9.5.1.new/includes: class.database.php~
+diff -ur flyspray-0.9.9.5.1/includes/class.flyspray.php flyspray-0.9.9.5.1.new/includes/class.flyspray.php
+--- flyspray-0.9.9.5.1/includes/class.flyspray.php	2008-03-24 16:20:56.000000000 +0000
++++ flyspray-0.9.9.5.1.new/includes/class.flyspray.php	2008-07-10 07:18:53.000000000 +0000
+@@ -113,7 +113,7 @@
+ 
+     function get_config_path($basedir = BASEDIR)
+     {
+-        $cfile = $basedir . '/flyspray.conf.php';
++        $cfile = '/etc/webapps/flyspray/flyspray.conf';
+         if (is_readable($hostconfig = sprintf('%s/%s.conf.php', $basedir, $_SERVER['SERVER_NAME']))) {
+             $cfile = $hostconfig;
+         }
+Tylko w flyspray-0.9.9.5.1.new/includes: class.flyspray.php~
+diff -ur flyspray-0.9.9.5.1/includes/constants.inc.php flyspray-0.9.9.5.1.new/includes/constants.inc.php
+--- flyspray-0.9.9.5.1/includes/constants.inc.php	2008-02-22 21:07:48.000000000 +0000
++++ flyspray-0.9.9.5.1.new/includes/constants.inc.php	2008-07-10 07:20:17.000000000 +0000
+@@ -8,7 +8,7 @@
+ 
+ define('BASEDIR', dirname(dirname(__FILE__)));
+ 
+-// Change this line if you move flyspray.conf.php elsewhere
++// Change this line if you move flyspray.conf elsewhere
+ $conf = @parse_ini_file(Flyspray::get_config_path(), true);
+ 
+ // $baseurl
+@@ -83,4 +83,4 @@
+ //define('JABBER_DEBUG', true);
+ //define('JABBER_DEBUG_FILE''/path/to/my/debug/file');
+ //define('FS_MAIL_LOGFILE', BASEDIR . '/logs/maillog.txt');
+-?>
+\ Brak znaku nowej linii na końcu pliku
++?>
+Tylko w flyspray-0.9.9.5.1.new/includes: constants.inc.php~
+diff -ur flyspray-0.9.9.5.1/setup/exportdb.php flyspray-0.9.9.5.1.new/setup/exportdb.php
+--- flyspray-0.9.9.5.1/setup/exportdb.php	2007-02-04 07:11:48.000000000 +0000
++++ flyspray-0.9.9.5.1.new/setup/exportdb.php	2008-07-10 07:19:56.000000000 +0000
+@@ -3,10 +3,10 @@
+ error_reporting(E_ALL);
+  
+  
+-require_once '../adodb/adodb.inc.php';
+-require_once '../adodb/adodb-xmlschema03.inc.php';
++require_once '/usr/share/php/adodb/adodb.inc.php';
++require_once '/usr/share/php/adodb/adodb-xmlschema03.inc.php';
+  
+-$conf    = @parse_ini_file('../flyspray.conf.php', true) or die('Cannot open config file.');
++$conf    = @parse_ini_file('/etc/webapps/flyspray/flyspray.conf', true) or die('Cannot open config file.');
+  
+ /* Start by creating a normal ADODB connection.
+  */
+@@ -26,4 +26,4 @@
+  
+ file_put_contents('flyspray-schema.xml', $data);
+  
+-?>
+\ Brak znaku nowej linii na końcu pliku
++?>
+Tylko w flyspray-0.9.9.5.1.new/setup: exportdb.php~
 diff -ur flyspray-0.9.9.5.1/setup/index.php flyspray-0.9.9.5.1.new/setup/index.php
 --- flyspray-0.9.9.5.1/setup/index.php	2008-03-07 18:55:22.000000000 +0000
-+++ flyspray-0.9.9.5.1.new/setup/index.php	2008-07-10 06:44:40.000000000 +0000
++++ flyspray-0.9.9.5.1.new/setup/index.php	2008-07-10 07:16:17.000000000 +0000
 @@ -12,9 +12,9 @@
  ini_set('memory_limit', '64M');
  
  
 -if (is_readable ('../flyspray.conf.php') && count(parse_ini_file('../flyspray.conf.php')) > 0)
-+if (is_readable ('/etc/webapps/flyspray/flyspray.conf.php') && count(parse_ini_file('/etc/webapps/flyspray/flyspray.conf.php')) > 0)
++if (is_readable ('/etc/webapps/flyspray/flyspray.conf') && count(parse_ini_file('/etc/webapps/flyspray/flyspray.conf')) > 0)
  {
 -   die('Flyspray already installed. Use the <a href="upgrade.php">upgrader</a> to upgrade your Flyspray, or delete flyspray.conf.php to run setup.
-+   die('Flyspray already installed. Use the <a href="upgrade.php">upgrader</a> to upgrade your Flyspray, or delete /etc/webapps/flyspray/flyspray.conf.php to run setup.
++   die('Flyspray already installed. Use the <a href="upgrade.php">upgrader</a> to upgrade your Flyspray, or delete /etc/webapps/flyspray/flyspray.conf to run setup.
          You can *not* use the setup on an existing database.');
  }
  
@@ -35,15 +111,60 @@ diff -ur flyspray-0.9.9.5.1/setup/index.php flyspray-0.9.9.5.1.new/setup/index.p
        $this->mProductName       = 'Flyspray';
        $this->mMinPasswordLength	= 8;
  
-@@ -806,7 +806,7 @@
+@@ -125,9 +125,9 @@
+       // Get the full path to the file
+       $file = APPLICATION_PATH .'/' . $path;
+ 
+-      // In case it is flyspray.conf.php, the file does not exist
++      // In case it is flyspray.conf, the file does not exist
+       // so we can't tell that it is writeable. So we attempt to create an empty one
+-      if ($path == 'flyspray.conf.php') {
++      if ($path == 'flyspray.conf') {
+         $fp = @fopen($file, 'wb');
+         @fclose($fp);
+       }
+@@ -305,7 +305,7 @@
+                         'vars' => array(
+                                     'product_name' => $this->mProductName,
+                                     'message' => $this->GetPageMessage(),
+-                                    'config_writeable' => $this->mWriteStatus['flyspray.conf.php'],
++                                    'config_writeable' => $this->mWriteStatus['flyspray.conf'],
+                                     'config_text' => $this->mConfigText,
+                                     'admin_username' => $this->mAdminUsername,
+                                     'admin_password' => $this->mAdminPassword,
+@@ -397,10 +397,10 @@
+                                     'required_php' => $this->mPhpRequired,
+                                     'php_output' => $this->CheckPhpCompatibility(),
+                                     'database_output' => $this->GetDatabaseOutput(),
+-                                    'config_output' => $this->CheckWriteability('flyspray.conf.php'),
++                                    'config_output' => $this->CheckWriteability('flyspray.conf'),
+                                     'cache_output' => $this->CheckWriteability('cache'),
+                                     'att_output' => $this->CheckWriteability('attachments'),
+-                                    'config_status' => $this->mWriteStatus['flyspray.conf.php'],
++                                    'config_status' => $this->mWriteStatus['flyspray.conf'],
+                                     'xmlStatus' => $this->xmlStatus,
+                                     'sapiStatus' => $this->sapiStatus,
+                                     'php_settings' => $this->GetPhpSettings(),
+@@ -806,16 +806,16 @@
  
        $config_text = $config_intro . implode( "\n", $config );
  
 -      if (is_writable('../flyspray.conf.php') && ($fp = fopen('../flyspray.conf.php', "wb")))
-+      if (is_writable('/etc/webapps/flyspray/flyspray.conf.php') && ($fp = fopen('/etc/webapps/flyspray/flyspray.conf.php', "wb")))
++      if (is_writable('/etc/webapps/flyspray/flyspray.conf') && ($fp = fopen('/etc/webapps/flyspray/flyspray.conf', "wb")))
        {
           fputs($fp, $config_text, strlen($config_text));
           fclose($fp);
+-         $this->mWriteStatus['flyspray.conf.php'] = true;
++         $this->mWriteStatus['flyspray.conf'] = true;
+       }
+       else
+       {
+          $this->mConfigText = $config_text;
+-         $this->mWriteStatus['flyspray.conf.php'] = false;
++         $this->mWriteStatus['flyspray.conf'] = false;
+       }
+ 
+ 
 Tylko w flyspray-0.9.9.5.1.new/setup: index.php~
 diff -ur flyspray-0.9.9.5.1/setup/templates/complete_install.tpl flyspray-0.9.9.5.1.new/setup/templates/complete_install.tpl
 --- flyspray-0.9.9.5.1/setup/templates/complete_install.tpl	2007-02-04 07:11:48.000000000 +0000
@@ -137,7 +258,7 @@ diff -ur flyspray-0.9.9.5.1/setup/templates/pre_install.tpl flyspray-0.9.9.5.1.n
 Tylko w flyspray-0.9.9.5.1.new/setup/templates: pre_install.tpl~
 diff -ur flyspray-0.9.9.5.1/setup/upgrade.php flyspray-0.9.9.5.1.new/setup/upgrade.php
 --- flyspray-0.9.9.5.1/setup/upgrade.php	2007-08-23 17:55:30.000000000 +0000
-+++ flyspray-0.9.9.5.1.new/setup/upgrade.php	2008-07-10 06:45:24.000000000 +0000
++++ flyspray-0.9.9.5.1.new/setup/upgrade.php	2008-07-10 07:16:42.000000000 +0000
 @@ -39,8 +39,8 @@
  @require_once OBJECTS_PATH . '/class.tpl.php';
  
@@ -149,4 +270,13 @@ diff -ur flyspray-0.9.9.5.1/setup/upgrade.php flyspray-0.9.9.5.1.new/setup/upgra
  
  $db = new Database;
  $db->dbOpenFast($conf['database']);
+@@ -204,7 +204,7 @@
+         }
+ 
+         $this->old_config = parse_ini_file($location, true) or die('Aborting: Could not open config file at ' . $location);
+-        $this->new_config = parse_ini_file($upgrade_path . '/flyspray.conf.php', true);
++        $this->new_config = parse_ini_file($upgrade_path . '/flyspray.conf', true);
+         // Now we overwrite all values of the *default* file if there is one in the existing config
+         array_walk($this->new_config, array($this, '_merge_configs'));
+         // save custom attachment definitions
 Tylko w flyspray-0.9.9.5.1.new/setup: upgrade.php~
